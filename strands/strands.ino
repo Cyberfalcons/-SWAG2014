@@ -1,7 +1,10 @@
 #include <Adafruit_NeoPixel.h>
 
 #define s1PIN 6
-#define s2PIN 3
+#define s2PIN 10
+#define s3PIN 11
+//#define s4PIN 9
+#define s5PIN 5
 
 #define pin1 3
 #define pin2 4
@@ -11,6 +14,9 @@
 // Parameter 3 = pixel type flags, add together as needed:
 Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(15, s1PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel strip2 = Adafruit_NeoPixel(15, s2PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip3 = Adafruit_NeoPixel(15, s3PIN, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel //strip4 = Adafruit_NeoPixel(15, s4PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip5 = Adafruit_NeoPixel(15, s5PIN, NEO_GRB + NEO_KHZ800);
 
 
 const uint8_t del = 50; // Standard delay time
@@ -23,8 +29,14 @@ void setup() {
 
   strip1.begin();
   strip2.begin();
+  strip3.begin();
+  ////strip4////strip4.begin();
+  strip5.begin();
   strip1.show(); // Initialize all pixels to 'off'
   strip2.show();
+  strip3.show();
+  ////strip4.show();
+  strip5.show();
 }
 
 void loop() {
@@ -60,40 +72,73 @@ void swag() {
 void catchLight(boolean c) {
   if (c) {
     colorWipe(strip1.Color(0,   255,   0), del*2); // Green
-    colorWipe(strip2.Color(0,   255,   0), del*2); // Green
   }
   else {
     theaterChase(strip1.Color(  127,   0, 0), del*2); // Red
-    theaterChase(strip2.Color(  127,   0, 0), del*2); // Red
   }
 }
 
 // idle
 void idle() {
   for(uint16_t i=0; i<strip1.numPixels(); i++) {
-    strip1.setPixelColor(i, strip1.Color(255,140,0));
+    strip1.setPixelColor(6+i, strip1.Color(255,140,0));
+    strip1.setPixelColor(6-i, strip1.Color(255,140,0));
     strip2.setPixelColor(i, strip1.Color(255,140,0));
+    strip3.setPixelColor(i, strip1.Color(255,140,0));
+    ////strip4.setPixelColor(i, strip1.Color(255,140,0));
+    strip5.setPixelColor(i, strip1.Color(255,140,0));
     strip1.show();
     strip2.show();
-    delay(del/2);
+    strip3.show();
+    ////strip4.show();
+    strip5.show();
+    delay(del);
   }
   for(uint16_t i=strip1.numPixels(); i>0; i--) {
-    strip1.setPixelColor(i, strip1.Color(0,0,0));
+    strip1.setPixelColor(6-i, strip1.Color(0,0,0));
+    strip1.setPixelColor(6+i, strip1.Color(0,0,0));
     strip2.setPixelColor(i, strip1.Color(0,0,0));
+    strip3.setPixelColor(i, strip1.Color(0,0,0));
+    ////strip4.setPixelColor(i, strip1.Color(0,0,0));
+    strip5.setPixelColor(i, strip1.Color(0,0,0));
     strip1.show();
     strip2.show();
-    delay(del/2);
+    strip3.show();
+    ////strip4.show();
+    strip5.show();
+    delay(del);
   }
 }
 
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip1.numPixels(); i++) {
-    strip1.setPixelColor(i, c);
+  for(uint8_t i=0; i<strip1.numPixels(); i++) {
+    strip1.setPixelColor(6+i, c);
+    strip1.setPixelColor(6-i, c);
     strip2.setPixelColor(i, c);
+    strip3.setPixelColor(i, c);
+    ////strip4.setPixelColor(i, c);
+    strip5.setPixelColor(i, c);
     strip1.show();
     strip2.show();
-    delay(wait);
+    strip3.show();
+    //strip4.show();
+    strip5.show();
+    delay(del/3);
+  }
+  for(uint8_t i=strip1.numPixels(); i>0; i--) {
+    strip1.setPixelColor(6-i, strip1.Color(0,0,0));
+    strip1.setPixelColor(6+i, strip1.Color(0,0,0));
+    strip2.setPixelColor(i, strip1.Color(0,0,0));
+    strip3.setPixelColor(i, strip1.Color(0,0,0));
+    //strip4.setPixelColor(i, strip1.Color(0,0,0));
+    strip5.setPixelColor(i, strip1.Color(0,0,0));
+    strip1.show();
+    strip2.show();
+    strip3.show();
+    //strip4.show();
+    strip5.show();
+    delay(del/3);
   }
 }
 
@@ -104,9 +149,15 @@ void rainbow(uint8_t wait) {
     for(i=0; i<strip1.numPixels(); i++) {
       strip1.setPixelColor(i, Wheel((i+j) & 255));
       strip2.setPixelColor(i, Wheel((i+j) & 255));
+      strip3.setPixelColor(i, Wheel((i+j) & 255));
+      //strip4.setPixelColor(i, Wheel((i+j) & 255));
+      strip5.setPixelColor(i, Wheel((i+j) & 255));
     }
     strip1.show();
     strip2.show();
+    strip3.show();
+    //strip4.show();
+    strip5.show();
     delay(wait);
   }
 }
@@ -118,29 +169,44 @@ void rainbowCycle(uint8_t wait) {
     for(i=0; i< strip1.numPixels(); i++) {
       strip1.setPixelColor(i, Wheel(((i * 256 / strip1.numPixels()) + j) & 255));
       strip2.setPixelColor(i, Wheel(((i * 256 / strip1.numPixels()) + j) & 255));
+      strip3.setPixelColor(i, Wheel(((i * 256 / strip1.numPixels()) + j) & 255));
+      //strip4.setPixelColor(i, Wheel(((i * 256 / strip1.numPixels()) + j) & 255));
+      strip5.setPixelColor(i, Wheel(((i * 256 / strip1.numPixels()) + j) & 255));
     }
     strip1.show();
     strip2.show();
+    strip3.show();
+    //strip4.show();
+    strip5.show();
     delay(wait);
   }
 }
 
 //Theatre-style crawling lights.
 void theaterChase(uint32_t c, uint8_t wait) {
-  for (int j=0; j<10; j++) {  //do 10 cycles of chasing
+  for (int j=0; j<5; j++) {  //do 5 cycles of chasing
     for (int q=0; q < 3; q++) {
       for (int i=0; i < strip1.numPixels(); i=i+3) {
         strip1.setPixelColor(i+q, c);    //turn every third pixel on
         strip2.setPixelColor(i+q, c);    //turn every third pixel on
+        strip3.setPixelColor(i+q, c);    //turn every third pixel on
+        //strip4.setPixelColor(i+q, c);    //turn every third pixel on
+        strip5.setPixelColor(i+q, c);    //turn every third pixel on
       }
       strip1.show();
       strip2.show();
+      strip3.show();
+      //strip4.show();
+      strip5.show();
 
       delay(wait);
 
       for (int i=0; i < strip1.numPixels(); i=i+3) {
         strip1.setPixelColor(i+q, 0);        //turn every third pixel off
         strip2.setPixelColor(i+q, 0);        //turn every third pixel off
+        strip3.setPixelColor(i+q, 0);        //turn every third pixel off
+        //strip4.setPixelColor(i+q, 0);        //turn every third pixel off
+        strip5.setPixelColor(i+q, 0);        //turn every third pixel off
       }
     }
   }
@@ -164,7 +230,7 @@ uint32_t Wheel(byte WheelPos) {
 
 // Returns a decimal version of the signal from the robot
 uint8_t getValue() {
-  return digitalRead(pin1) + (digitalRead(pin2)*2);
+  return (digitalRead(pin1)==HIGH)+(2*(digitalRead(pin2)==HIGH));
 }
 
 
